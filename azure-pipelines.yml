@@ -1,0 +1,37 @@
+trigger:
+- master
+
+stages:
+- stage: Build
+  displayName: 'Build RMSDB'
+  jobs:
+  - template: azure-pipelines-build.templates.yml
+
+- stage: DeployDEV
+  displayName: 'Deploy Web APP to DEV environment'
+  condition: succeeded()
+  dependsOn: Build
+  variables:
+  - group: 'DEV_VAR_GROUP'
+  jobs:
+  - template: azure-pipelines-deployment-template.yml
+    parameters:
+      azureConnectionName: '$(serviceConnectionName)'
+      webAppName: '$(webPortalName)'
+      resourceGroupName: '$(resourceGroupName)'
+      environment: 'DEV'
+
+- stage: DeployTEST
+  displayName: 'Deploy Web APP to TEST environment'
+  condition: succeeded()
+  dependsOn: Build
+  variables:
+  - group: 'STAGE_VAR_GROUP'
+  jobs:
+  - template: azure-pipelines-deployment-template.yml
+    parameters:
+      azureConnectionName: '$(serviceConnectionName)'
+      webAppName: '$(webPortalName)'
+      resourceGroupName: '$(resourceGroupName)'
+      environment: 'STAGE'
+
