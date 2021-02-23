@@ -35,3 +35,4 @@ stages:
       resourceGroupName: '$(resourceGroupName)'
       environment: 'STAGE'
 
+
