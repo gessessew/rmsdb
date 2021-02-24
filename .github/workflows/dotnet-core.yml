@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Restore dependencies
-      run: dotnet restore ${{github.workspace}}/rmsdb/RMSDB.csproj
+      run: dotnet restore RMSDB.csproj
     - name: Build
       run: dotnet build ${{github.workspace}}/rmsdb/RMSDB.csproj --no-restore --configuration Release
     - name: Test
