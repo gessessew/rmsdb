@@ -30,7 +30,7 @@ jobs:
       uses: azure/webapps-deploy@2
       with:
         app-name: ${{env.AZURE_WEB_APP}}
-        publish-profile: ${{}secrets.AZURE_WEBAPP_PULISH_PROFILE}
+        publish-profile: ${{secrets.AZURE_WEBAPP_PULISH_PROFILE}}
         package: ./dotnetcorewebapp
       
       
