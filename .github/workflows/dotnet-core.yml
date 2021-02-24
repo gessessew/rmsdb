@@ -1,0 +1,38 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+env:
+  AZURE_WEB_APP: devapp001
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Restore dependencies
+      run: dotnet restore RMSDB.csproj
+    - name: Build
+      run: dotnet build RMSDB.csproj --no-restore --configuration Release
+    - name: Test
+      run: dotnet test RMSDB.csproj --no-build --verbosity normal 
+    - name: Publish
+      run: dotnet publish RMSDB.csproj -c Release -o dotnetcorewebapp
+    
+    - name: deploye to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{env.AZURE_WEB_APP}}
+        publish-profile: ${{secrets.AZURE_WEBAPP_PULISH_PROFILE}}
+        package: ./dotnetcorewebapp
+      
+      
+    
